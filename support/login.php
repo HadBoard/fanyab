@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/app/functions.php";
+require_once __DIR__ . "/app/functions.php";
 $action = new Action();
 
 
@@ -12,21 +12,26 @@ if ($action->auth()) {
 // ----------- check error ---------------------------------------------------------------------------------------------
 $error = 0;
 if (isset($_SESSION['error'])) {
-    $error = 1;
-    $error_val = $_SESSION['error'];
+    $error = $_SESSION['error'];
     unset($_SESSION['error']);
+}
+
+$alarm = 0;
+if (isset($_SESSION['alarm'])) {
+    $alarm = $_SESSION['alarm'];
+    unset($_SESSION['alarm']);
 }
 // ----------- check error ---------------------------------------------------------------------------------------------
 
 // ----------- check login ---------------------------------------------------------------------------------------------
-if (isset($_POST['sub1'])) {
+if (isset($_POST['login'])) {
 
     // get fields
-    $user = $action->request('user');
-    $pass = $action->request('pass');
+    $username = $action->request('username');
+    $password = $action->request('password');
 
     // send query
-    $command = $action->admin_login($user, $pass);
+    $command = $action->admin_login($username, $password);
 
     // check errors
     if (!$command) {
@@ -68,28 +73,40 @@ if (isset($_POST['sub1'])) {
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="https://hadboard.ir" target="_blank"><b>هادبورد</b></a>
+        <div class="image" >
+            <img src="public/img/suppport.png" width="100px" alt="User Image">
+        </div>
+        <b>فن یاب</b>
     </div>
 
-    <?php
-    if ($flash->hasMessages())
-        $flash->display();
-    ?>
+    <?php if ($error == 1) { ?>
+        <div class="alert alert-warning">
+            نام کاربری و یا پسورد درست وارد نشده است .
+        </div>
+    <?php } ?>
+
+    <?php if ($alarm == 1) { ?>
+        <div class="alert alert-success">
+            شما از سیستم خارج شدید :)
+        </div>
+    <?php } ?>
 
     <!-- /.login-logo -->
     <div class="card">
+
         <div class="card-body login-card-body">
             <p class="login-box-msg">فرم زیر را تکمیل کرده و ورود را بزنید . </p>
 
             <form method="post" novalidate>
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="پست الکترونیک" required value="<?= old('email') ?>">
+                    <input type="text" name="username" class="form-control" placeholder="نام کاربری" required value="">
                     <div class="input-group-append">
                         <span class="fa fa-user input-group-text"></span>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="رمز عبور" value="<?= old('password') ?>" required>
+                    <input type="password" name="password" class="form-control" placeholder="رمز عبور" value=""
+                           required>
                     <div class="input-group-append">
                         <span class="fa fa-lock input-group-text"></span>
                     </div>
@@ -98,7 +115,7 @@ if (isset($_POST['sub1'])) {
                     <div class="col-8">
                         <div class="checkbox icheck">
                             <label>
-                                <input name="remember" type="checkbox">    مرا به خاطر بسپار !
+                                <input name="remember" type="checkbox"> مرا به خاطر بسپار !
                             </label>
                         </div>
                     </div>

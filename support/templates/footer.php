@@ -43,5 +43,55 @@
 <script src="public/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="public/js/demo.js"></script>
+<!-- DataTables -->
+<script src="public/plugins/datatables/jquery.dataTables.js"></script>
+<script src="public/plugins/datatables/dataTables.bootstrap4.js"></script>
+
+
+<!-- jQuery -->
+<script src="public/plugins/jquery/jquery.min.js"></script>
+<!-- DataTables -->
+<script src="public/plugins/datatables/jquery.dataTables.js"></script>
+<script src="public/plugins/datatables/dataTables.bootstrap4.js"></script>
+
+<script>
+    $(function () {
+        $("#example").DataTable({
+            dom: 'Bfrtip',
+            "language": {
+                "lengthMenu": "Display _MENU_ records per page",
+                "zeroRecords": "اطلاعاتی یافت نشد",
+                "info": "نمایش صفحه _PAGE_ از _PAGES_",
+                "infoEmpty": "اطلاعاتی یافت نشد",
+                "infoFiltered": "(فیلتر شده از _MAX_ مجموع رکوردها)",
+                "paginate": {
+                    "first":      "اولین",
+                    "last":       "آخرین",
+                    "next":       "بعد",
+                    "previous":   "قبل"
+                },
+                "search":"جستجو: "
+            },
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        $('#example1').DataTable({
+            "language": {
+                "paginate": {
+                    "next": "بعدی",
+                    "previous" : "قبلی"
+                }
+            },
+            "info" : false,
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "autoWidth": false
+        });
+    });
+</script>
+
 </body>
 </html>

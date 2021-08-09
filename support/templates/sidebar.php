@@ -27,135 +27,30 @@
                     <li class="nav-item has-treeview menu-open">
                         <a href="/" class="nav-link active">
                             <i class="nav-icon fa fa-dashboard"></i>
-                            <p>
-                                داشبورد
-                            </p>
+                            <p>داشبورد</p>
                         </a>
                     </li>
 
-                    <li class="nav-header">
-                        <i class="nav-icon fa fa-circle-o text-danger"></i>
-                        مدیریت
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="/" class="nav-link">
+                            <i class="nav-icon fa fa-file-archive-o"></i>
+                            <p>فایل ها</p>
+                        </a>
                     </li>
 
-                    <li class="nav-item has-treeview">
-                        <a href="/admin.php" class="nav-link">
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../admin-list.php" class="nav-link">
                             <i class="nav-icon fa fa-user-secret"></i>
-                            <p>
-                                مدیران
-                            </p>
+                            <p>مدیران</p>
                         </a>
                     </li>
 
-                    <li class="nav-item has-treeview">
-                        <a href="user.php" class="nav-link ">
-                            <i class="nav-icon fa fa-user"></i>
-                            <p>
-                                کاربران
-                            </p>
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../log-admin.php" class="nav-link">
+                            <i class="nav-icon fa fa-file-archive-o"></i>
+                            <p>لاگ مدیران</p>
                         </a>
                     </li>
-
-                    <li class="nav-header">
-                        <i class="nav-icon fa fa-circle-o text-success"></i>
-                        فروشگاه
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="category.php" class="nav-link ">
-                            <i class="nav-icon fa fa-list"></i>
-                            <p>
-                                دسته بندی
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="product.php" class="nav-link ">
-                            <i class="nav-icon fa fa-product-hunt"></i>
-                            <p>
-                                محصولات
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="order.php" class="nav-link ">
-                            <i class="nav-icon fa fa-cart-arrow-down"></i>
-                            <p>
-                                سفارشات
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="payment.php" class="nav-link ">
-                            <i class="nav-icon fa fa-dollar"></i>
-                            <p>
-                                تراکنشات
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-header">
-                        <i class="nav-icon fa fa-circle-o text-warning"></i>
-                        پشتیبانی
-                    </li>
-
-                    <li class="nav-header">پشتیبانی</li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="ticket.php" class="nav-link ">
-                            <i class="nav-icon fa fa-ticket"></i>
-                            <p>
-                                تیکت
-                                <span class="badge badge-danger right">10</span>
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="contact.php" class="nav-link ">
-                            <i class="nav-icon fa fa-contao"></i>
-                            <p>
-                                تماس
-                                <span class="badge badge-warning right">3</span>
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="news.php" class="nav-link ">
-                            <i class="nav-icon fa fa-newspaper-o"></i>
-                            <p>
-                                خبرنامه
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-header">
-                        <i class="nav-icon fa fa-circle-o text-info"></i>
-                        سیستم
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="slide.php" class="nav-link ">
-                            <i class="nav-icon fa fa-sliders"></i>
-                            <p>
-                                اسلاید
-                            </p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item has-treeview">
-                        <a href="system.php" class="nav-link ">
-                            <i class="nav-icon fa fa-server"></i>
-                            <p>
-                                تنظیمات
-                            </p>
-                        </a>
-                    </li>
-
 
                 </ul>
             </nav>

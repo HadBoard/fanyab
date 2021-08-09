@@ -1,6 +1,6 @@
 <?php
 // ----------- start config methods ------------------------------------------------------------------------------------
-require_once __DIR__."/../bootstrap/autoload.php";
+require_once __DIR__ . "/../bootstrap/autoload.php";
 include('jdf.php');
 // ----------- end config methods --------------------------------------------------------------------------------------
 
@@ -116,6 +116,18 @@ class Action
         return $id;
     }
 
+    public function change_view($table, $id)
+    {
+        $view = $this->get_data($table, $id)->view;
+        $view = !$view;
+
+        $result = $this->connection->query("UPDATE `$table` SET 
+        `view`='$view'
+        WHERE `id` ='$id'");
+        if (!$this->result($result)) return false;
+        return $id;
+    }
+
     // ----------- get data from table
     public function get_data($table, $id)
     {
@@ -135,12 +147,13 @@ class Action
 
     // ----------- clean strings (to prevent sql injection attacks)
 
-    function get_tag( $attr, $value, $xml ) {
+    function get_tag($attr, $value, $xml)
+    {
 
         $attr = preg_quote($attr);
         $value = preg_quote($value);
 
-        $tag_regex = '/<p[^>]*'.$attr.'="'.$value.'">(.*?)<\\/p>/si';
+        $tag_regex = '/<p[^>]*' . $attr . '="' . $value . '">(.*?)<\\/p>/si';
 
         preg_match($tag_regex,
             $xml,
@@ -157,16 +170,15 @@ class Action
         $string = stripslashes($string);
 
         $string = mysqli_real_escape_string($this->connection, $string);
-        $string = $this->convertPersianNumbersToEnglish($string);
-        return $string;
+        return $this->convertNumbers($string);
     }
 
-    public function convertPersianNumbersToEnglish($input)
+    public function convertNumbers($input)
     {
         $persian = ['۰', '۱', '۲', '۳', '۴', '٤', '۵', '٥', '٦', '۶', '۷', '۸', '۹'];
-        $english = [ 0 ,  1 ,  2 ,  3 ,  4 ,  4 ,  5 ,  5 ,  6 ,  6 ,  7 ,  8 ,  9 ];
-        foreach($persian as $p) {
-            if (stripos($input,$p) > 0) return str_replace($persian, $english, $input);
+        $english = [0, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9];
+        foreach ($persian as $p) {
+            if (stripos($input, $p) > 0) return str_replace($persian, $english, $input);
         }
         return $input;
     }
@@ -212,66 +224,14 @@ class Action
         $month = $pieces[1];
         $day = $pieces[2];
         $b = gregorian_to_jalali($year, $month, $day, $mod = '-');
-        $f = $b[0] . '/' . $b[1] . '/' . $b[2];
-        return $f;
+        return $b[0] . '/' . $b[1] . '/' . $b[2];
     }
 
     // ----------- for send sms to mobile number
-    public function send_sms($mobile,$textMessage){
-
-        $webServiceURL  = "http://login.parsgreen.com/Api/SendSMS.asmx?WSDL";
-        $webServiceSignature = "86D08235-C008-4C53-8EEA-CE2284FD66F4";
-
-        $textMessage= mb_convert_encoding($textMessage,"UTF-8"); // encoding to utf-8
-
-
-        $parameters['signature'] = $webServiceSignature;
-        $parameters['toMobile' ]  = $mobile;
-        $parameters['smsBody' ]=$textMessage;
-        $parameters[ 'retStr'] = ""; // return refrence send status and mobile and report code for delivery
-
-
-        try
-        {
-            $con = new SoapClient($webServiceURL);
-
-            $responseSTD = (array) $con ->Send($parameters);
-
-            $responseSTD['retStr'] = (array) $responseSTD['retStr'];
-
-
-        }
-        catch (SoapFault $ex)
-        {
-            echo $ex->faultstring;
-        }
+    public function send_sms($mobile, $textMessage)
+    {
 
     }
-
-
-// public function broadcast($id){
-//     $row = $this->notif_get($id);
-//     $date = $row->created_at + 60;
-//     $date = date('Y-m-d',$date)."T".date('H:i:s',$date);
-//     $notification = new Notification(true);
-
-//     $notification->title = "'.$row->title.'";
-//     $notification->body = "'.$row->description.'";
-//     $notification->onClickAction = "open-app";
-//     $notification->url = "https://abarpayo.com";
-//     $notification->content = "nothing special";
-//     $notification->json = array();
-//     $notification->icon = "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg";
-//     $notification->image = "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg";
-//     $notification->sentTime = "$date";
-
-//     $api_key = "7afd5b75-d0f1-4abd-bd95-1679f7584224";
-//     $token = "265fc5c5cc483c01babda87210a0802454423004";
-
-//     $najva = new Najva($api_key,$token);
-
-//     $result = $najva->sendNotification($notification);
-// }
 
     // ----------- create random token
     public function get_token($length)
@@ -301,7 +261,7 @@ class Action
             $_SESSION['admin_id'] = $row->id;
             $_SESSION['admin_access'] = $row->access;
             $this->admin_update_last_login();
-            $this->log_action(1);
+            $this->admin_log(1);
             return true;
         }
         return false;
@@ -333,62 +293,13 @@ class Action
         return true;
     }
 
-    public function admin_check_per($admin,$per)
-    {
-        $result = $this->connection->query("SELECT * FROM `tbl_admin_permission` WHERE `admin_id`='$admin' AND `permission_id`='$per'");
-        $rowcount = $result->num_rows;
-        if ($rowcount < 1) return false;
-        return true;
-    }
-
-
-
-    public function admin_per_add($admin, $per)
-    {
-        $now = time();
-        $result = $this->connection->query("INSERT INTO `tbl_admin_permission`
-        (`admin_id`,`permission_id`,`created_at`) 
-        VALUES
-        ('$admin','$per','$now')");
-        if (!$this->result($result)) return false;
-        return $this->connection->insert_id;
-
-    }
-
-    public function admin_per_list($id)
-    {
-        return $result = $this->connection->query("SELECT * FROM `tbl_admin_permission` WHERE `admin_id`='$id'");
-    }
-
-    public function admin_per_remove($admin, $per)
-    {
-        $result = $this->connection->query("DELETE FROM `tbl_admin_permission` WHERE `admin_id`='$admin' AND `permission_id`='$per'");
-        if (!$this->result($result)) return false;
-        return true;
-    }
-
-    // ----------- update profile (logged admin)
-    public function profile_edit($first_name, $last_name, $phone, $password)
-    {
-        $id = $this->admin()->id;
-        $now = time();
-        $result = $this->connection->query("UPDATE `tbl_admin` SET 
-        `first_name`='$first_name',
-        `last_name`='$last_name',
-        `phone`='$phone',
-        `password`='$password',
-        `updated_at`='$now'
-        WHERE `id` ='$id'");
-        if (!$this->result($result)) return false;
-        $this->log_action(2);
-        return $id;
-    }
 
     // ----------- for show all admins
     public function admin_list()
     {
         $id = $this->admin()->id;
         $result = $this->connection->query("SELECT * FROM `tbl_admin` WHERE NOT `id`='$id' ORDER BY `id` DESC");
+//        $result = $this->connection->query("SELECT * FROM `tbl_admin` ORDER BY `id` DESC");
         if (!$this->result($result)) return false;
         return $result;
     }
@@ -402,6 +313,9 @@ class Action
         VALUES
         ('$first_name','$last_name','$phone','$username','$password','$access','$status','$now')");
         if (!$this->result($result)) return false;
+
+        $this->admin_log(3, $username);
+
         return $this->connection->insert_id;
     }
 
@@ -420,6 +334,9 @@ class Action
         `updated_at`='$now'
         WHERE `id` ='$id'");
         if (!$this->result($result)) return false;
+
+        $this->admin_log(4, $username);
+
         return $id;
     }
 
@@ -427,6 +344,9 @@ class Action
     public function admin_remove($id)
     {
         if ($this->admin_get($id)->access) return false;
+
+        $this->admin_log(4, $this->admin_get($id)->username);
+
         return $this->remove_data("tbl_admin", $id);
     }
 
@@ -462,6 +382,45 @@ class Action
     }
 
     // ----------- end ADMINS ------------------------------------------------------------------------------------------
+
+    // ----------- start log ----------------------------------------------------------------------------
+
+    public function action_get($id)
+    {
+        return $this->get_data("tbl_action", $id);
+    }
+
+    public function admin_log($action, $variable = null)
+    {
+        $now = time();
+        $admin_id = $this->admin()->id;
+        $ip = $_SERVER['REMOTE_ADDER'];
+        $result = $this->connection->query("INSERT INTO tbl_admin_log (`admin_id`,`action_id`,`variable`,`ip`,`created_at`)
+                                                VALUES('$admin_id','$action','$variable','$ip','$now')");
+        if (!$this->result($result)) return false;
+        return $this->connection->insert_id;
+    }
+
+    // ----------- for show all admins log
+    public function admin_log_list()
+    {
+        $result = $this->connection->query("SELECT * FROM `tbl_admin_log` WHERE `view`=0 ORDER BY `id` DESC");
+        if (!$this->result($result)) return false;
+        return $result;
+    }
+
+    // ----------- change admin's view
+    public function admin_log_view_all()
+    {
+        $result = $this->connection->query("UPDATE `tbl_admin_log` SET 
+        `view`='1'");
+        if (!$this->result($result)) return false;
+        return true;
+
+    }
+
+    // ----------- end log ----------------------------------------------------------------------------
+
 
 }
 

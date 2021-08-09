@@ -1,5 +1,5 @@
 <?php
 require 'functions.php';
 $action = new Action();
-var_dump($action->table_counter("tbl"));
+echo $action->admin_log_view($id);
 ?>

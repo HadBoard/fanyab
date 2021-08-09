@@ -5,13 +5,13 @@
 
 <?php
 require_once __DIR__."/../app/functions.php";
-//$action = new Action();
-//
-//// check admin access
-//if ($action->guest()) {
-//    header("Location: login.php");
-//    return 0;
-//}
+$action = new Action();
+
+// check admin access
+if ($action->guest()) {
+    header("Location: login.php");
+    return 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +28,8 @@ require_once __DIR__."/../app/functions.php";
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="public/css/adminlte.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="public/plugins/datatables/dataTables.bootstrap4.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="public/plugins/iCheck/flat/blue.css">
     <!-- Morris chart -->
