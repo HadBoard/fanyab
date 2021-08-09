@@ -10,9 +10,8 @@ class DB
     // ----------- properties
     protected $_DB_HOST = 'localhost';
     protected $_DB_NAME = 'fanyab_SS';
-    protected $_DB_USER = 'fanyab_SS';
-    protected $_DB_PASS = '5tAlAEDY3B';
-    //protected $_DB_NAME = 'abarpayo';
+    protected $_DB_USER = 'root';
+    protected $_DB_PASS = '';
     protected $connection;
 
     // ----------- constructor
