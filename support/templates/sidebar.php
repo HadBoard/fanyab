@@ -47,10 +47,54 @@
 
                     <li class="nav-item has-treeview menu-open">
                         <a href="../log-admin.php" class="nav-link">
-                            <i class="nav-icon fa fa-file-archive-o"></i>
+                            <i class="nav-icon ion ion-stats-bars"></i>
                             <p>لاگ مدیران</p>
                         </a>
                     </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../user-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-user"></i>
+                            <p>کاربران</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../request-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-hand-spock-o"></i>
+                            <p>در خواست ها</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../status-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-star"></i>
+                            <p>وضعیت ها</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../user-log-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-tasks"></i>
+                            <p>لاگ کاربران</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../sms-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-list"></i>
+                            <p>پیام های آماده</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="../sms-log-list.php" class="nav-link">
+                            <i class="nav-icon fa fa-send"></i>
+                            <p>پیام های ارسالی</p>
+                        </a>
+                    </li>
+
+
 
                 </ul>
             </nav>

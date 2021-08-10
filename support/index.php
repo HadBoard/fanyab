@@ -1,6 +1,7 @@
 <?php
 $title = "داشبورد";
 require_once __DIR__ . "/templates/header.php";
+$action = new Action();
 ?>
 
 <div class="content-wrapper">
@@ -31,14 +32,13 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>150</h3>
-
-                            <p>سفارشات جدید</p>
+                            <h3><?= $action->admin_counter() ?></h3>
+                            <p>مدیران سیستم</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fa fa-user-secret"></i>
                         </div>
-                        <a href="#" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
+                        <a href="admin-list.php" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -46,14 +46,13 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>افزایش امتیاز</p>
+                            <h3><?= $action->user_counter() ?></h3>
+                            <p>کاربران</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
+                            <i class="fa fa-user"></i>
                         </div>
-                        <a href="#" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
+                        <a href="user-list.php" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -61,14 +60,13 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
-
-                            <p>کاربران ثبت شده</p>
+                            <h3><?= $action->request_counter() ?></h3>
+                            <p>درخواست ها</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-person-add"></i>
+                            <i class="fa fa-hand-spock-o"></i>
                         </div>
-                        <a href="#" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
+                        <a href="request_list.php" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->

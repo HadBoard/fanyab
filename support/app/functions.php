@@ -362,11 +362,6 @@ class Action
         return $this->get_data("tbl_admin", $id);
     }
 
-    public function notif_get($id)
-    {
-        return $this->get_data("tbl_notif", $id);
-    }
-
 
     // ----------- get admin's data (logged)
     public function admin()
@@ -420,6 +415,104 @@ class Action
     }
 
     // ----------- end log ----------------------------------------------------------------------------
+
+
+    // ----------- start user ----------------------------------------------------------------------------
+    // ----------- for show all admins
+    public function user_list()
+    {
+        return $this->table_list("tbl_user");
+    }
+
+    // ----------- add an admin
+    public function user_add($first_name, $last_name, $phone, $username, $password, $status, $access)
+    {
+        $now = time();
+        $result = $this->connection->query("INSERT INTO `tbl_user`
+        (`first_name`,`last_name`,`phone`,`username`,`password`,`access`,`status`,`created_at`) 
+        VALUES
+        ('$first_name','$last_name','$phone','$username','$password','$access','$status','$now')");
+        if (!$this->result($result)) return false;
+
+        $this->admin_log(3, $username);
+
+        return $this->connection->insert_id;
+    }
+
+    // ----------- update admin's detail
+    public function user_edit($id, $first_name, $last_name, $phone, $username, $password, $status, $access)
+    {
+        $now = time();
+        $result = $this->connection->query("UPDATE `tbl_user` SET 
+        `first_name`='$first_name',
+        `last_name`='$last_name',
+        `phone`='$phone',
+        `username` = '$username',
+        `password`='$password',
+        `access` = '$access',
+        `status`='$status',
+        `updated_at`='$now'
+        WHERE `id` ='$id'");
+        if (!$this->result($result)) return false;
+
+        $this->admin_log(4, $username);
+
+        return $id;
+    }
+
+    // ----------- remove admin
+    public function user_remove($id)
+    {
+        $this->admin_log(4, $this->tbl_user_get($id)->phone);
+        return $this->remove_data("tbl_user", $id);
+    }
+
+    // ----------- change admin's status
+    public function user_status($id)
+    {
+        return $this->change_status('tbl_user', $id);
+    }
+
+    // ----------- get admin's data
+    public function user_get($id)
+    {
+        return $this->get_data("tbl_user", $id);
+    }
+
+    // ----------- count of admin
+    public function user_counter()
+    {
+        return $this->table_counter("tbl_user");
+    }
+
+    // ----------- end user ------------------------------------------------------------------------------
+
+    // ----------- start sms ------------------------------------------------------------------------------
+    public function sms_list()
+    {
+        return $this->table_list("tbl_sms");
+    }
+
+    public function sms_edit($slug, $text)
+    {
+        $result = $this->connection->query("UPDATE `tbl_sms` SET 
+        `text`='$text'
+        WHERE `slug` ='$slug'");
+        if (!$this->result($result)) return false;
+        return true;
+    }
+
+    // ----------- end sms ------------------------------------------------------------------------------
+
+    // ----------- start request ------------------------------------------------------------------------------
+
+    public function request_counter()
+    {
+        return $this->table_counter("tbl_request");
+    }
+
+    // ----------- end request ------------------------------------------------------------------------------
+
 
 
 }
