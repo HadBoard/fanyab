@@ -84,10 +84,13 @@ class Action
     }
 
     // ----------- get all fields in table
-    public function table_list($table)
+    public function table_list($table, $desc = true)
     {
         // $id = $this->admin()->id;
+        if ($desc)
         $result = $this->connection->query("SELECT * FROM `$table` ORDER BY `id` DESC");
+        else
+        $result = $this->connection->query("SELECT * FROM `$table` ORDER BY `id`");
         if (!$this->result($result)) return false;
         return $result;
     }
@@ -225,12 +228,6 @@ class Action
         $day = $pieces[2];
         $b = gregorian_to_jalali($year, $month, $day, $mod = '-');
         return $b[0] . '/' . $b[1] . '/' . $b[2];
-    }
-
-    // ----------- for send sms to mobile number
-    public function send_sms($mobile, $textMessage)
-    {
-
     }
 
     // ----------- create random token
@@ -485,6 +482,13 @@ class Action
         return $this->table_counter("tbl_user");
     }
 
+    public function user_log_list()
+    {
+        $result = $this->connection->query("SELECT * FROM `tbl_user_log` WHERE `view`=0 ORDER BY `id` DESC");
+        if (!$this->result($result)) return false;
+        return $result;
+    }
+
     // ----------- end user ------------------------------------------------------------------------------
 
     // ----------- start sms ------------------------------------------------------------------------------
@@ -493,12 +497,48 @@ class Action
         return $this->table_list("tbl_sms");
     }
 
+    public function sms_log_list()
+    {
+        return $this->table_list("tbl_sms_log");
+    }
+
     public function sms_edit($slug, $text)
     {
         $result = $this->connection->query("UPDATE `tbl_sms` SET 
         `text`='$text'
         WHERE `slug` ='$slug'");
         if (!$this->result($result)) return false;
+        return true;
+    }
+
+    public function sms_get($id)
+    {
+        return $this->get_data("tbl_sms", $id);
+    }
+
+    public function sms_add($user, $sms, $var = "")
+    {
+
+        $text = $this->sms_get($sms)->text;
+        $text = str_replace("#var", $var, $text);
+
+        $now = time();
+        $admin = (int) $this->admin()->id;
+        $user = (int) $user;
+
+        $result = $this->connection->query("INSERT INTO `tbl_sms_log`
+        (`admin_id`,`user_id`,`text`,`send_at`)
+        VALUES
+        ('$admin','$user','$text','$now')");
+
+        if (!$this->result($result)) return false;
+
+        $phone = $this->user_get($user)->phone;
+        return $this->send_sms($phone, $text);
+    }
+
+    public function send_sms($phone, $text)
+    {
         return true;
     }
 
@@ -511,7 +551,49 @@ class Action
         return $this->table_counter("tbl_request");
     }
 
+    public function request_list()
+    {
+        return $this->table_list("tbl_request");
+    }
+
+    public function request_type_get($type) {
+        if ($type == 0) echo "تعمیرات";
+        elseif ($type == 1) echo "";
+        elseif ($type == 2) echo "";
+        elseif ($type == 3) echo "";
+        elseif ($type == 4) echo "";
+        elseif ($type == 5) echo "";
+        elseif ($type == 6) echo "";
+        else echo "تعریف نشده";
+    }
+
+    public function request_remove($id)
+    {
+        return $this->remove_data("tbl_request", $id);
+    }
+
+    public function request_status_counter($status)
+    {
+        $result = $this->connection->query("SELECT * FROM `tbl_request` WHERE `status_id`='$status' ");
+        if (!$this->result($result)) return false;
+        return $result->num_rows;
+    }
+
     // ----------- end request ------------------------------------------------------------------------------
+
+    // ----------- start status ------------------------------------------------------------------------------
+    public function status_list()
+    {
+        return $this->table_list("tbl_status", false);
+    }
+
+    public function status_get($id)
+    {
+        return $this->get_data("tbl_status", $id);
+    }
+
+    // ----------- end status ------------------------------------------------------------------------------
+
 
 
 

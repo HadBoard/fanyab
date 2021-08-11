@@ -43,7 +43,7 @@
         </li>
         <!-- Logout icon -->
         <li class="nav-item">
-            <a class="nav-link" href="../logout.php"><i class="fa fa-power-off"></i></a>
+            <a class="nav-link" href="logout.php"><i class="fa fa-power-off"></i></a>
         </li>
 
     </ul>

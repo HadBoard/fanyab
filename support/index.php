@@ -1,7 +1,9 @@
 <?php
 $title = "داشبورد";
-require_once __DIR__ . "/templates/header.php";
+require_once __DIR__ . "/app/functions.php";
 $action = new Action();
+$_SESSION['active'] = 1;
+require_once __DIR__ . "/templates/header.php";
 ?>
 
 <div class="content-wrapper">
@@ -85,6 +87,78 @@ $action = new Action();
                     </div>
                 </div>
                 <!-- ./col -->
+            </div>
+            <!-- /.row -->
+            <!-- Info boxes -->
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fa fa-files-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                درخواست های
+                                <?= $action->status_get(2)->title ?>
+                            </span>
+                            <span class="info-box-number"><?= $action->request_status_counter(2) ?></span>
+                        </div>
+                        </a>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fa fa-files-o"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                درخواست های
+                                <?= $action->status_get(3)->title ?>
+                            </span>
+                            <span class="info-box-number"><?= $action->request_status_counter(3) ?></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-files-o"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                درخواست های
+                                <?= $action->status_get(4)->title ?>
+                            </span>
+                            <span class="info-box-number"><?= $action->request_status_counter(4) ?></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-files-o"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                درخواست های
+                                <?= $action->status_get(5)->title ?>
+                            </span>
+                            <span class="info-box-number"><?= $action->request_status_counter(5) ?></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
             </div>
             <!-- /.row -->
         </div>

@@ -72,9 +72,12 @@
                 },
                 "search":"جستجو: "
             },
-            buttons: [
-                'csv', 'excel', 'pdf', 'print'
-            ]
+            "info" : true,
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "autoWidth": true
         });
         $('#example1').DataTable({
             "language": {

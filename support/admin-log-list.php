@@ -2,6 +2,7 @@
 $title = "لاگ مدیران";
 require_once __DIR__ . "/app/functions.php";
 $action = new Action();
+$_SESSION['active'] = 4;
 
 // check admin access
 //if (!$action->admin()->access) {
@@ -11,9 +12,9 @@ $action = new Action();
 
 // ----------- urls ----------------------------------------------------------------------------------------------------
 // main url for add , edit
-$main_url = "log-admin.php";
+$main_url = "admin-log-list.php";
 // main url for remove , change status
-$list_url = "log-admin.php";
+$list_url = "admin-log-list.php";
 // ----------- urls ----------------------------------------------------------------------------------------------------
 
 // ----------- get data ------------------------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- /.card-header -->
                     <div class="card-body">
                         <a href="excel.php?admin" class="btn btn-secondary float-left m-1">دریافت خروجی</a>
-                        <a href="log-admin.php?all" class="btn btn-danger float-left m-1">حذف همه</a>
+                        <a href="<?= $list_url ?>?all" class="btn btn-danger float-left m-1">حذف همه</a>
                         <table id="example" class="table table-striped">
                             <thead>
                             <tr  class="text-center">

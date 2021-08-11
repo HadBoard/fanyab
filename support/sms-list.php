@@ -2,7 +2,7 @@
 $title = "پیام های آماده";
 require_once __DIR__ . "/app/functions.php";
 $action = new Action();
-
+$_SESSION['active'] = 9;
 
 // ----------- urls ----------------------------------------------------------------------------------------------------
 // main url for remove , change status

@@ -1,44 +1,37 @@
 <?php
-$title = "مدیران";
+$title = "لاگ کاربران";
 require_once __DIR__ . "/app/functions.php";
 $action = new Action();
-$_SESSION['active'] = 3;
-
-// check admin access
-if (!$action->admin()->access) {
-    header("Location: index.php");
-    return 0;
-}
+$_SESSION['active'] = 8;
 
 // ----------- urls ----------------------------------------------------------------------------------------------------
 // main url for add , edit
-$main_url = "admin.php";
+$main_url = "user-log-list.php";
 // main url for remove , change status
-$list_url = "admin-list.php";
+$list_url = "user-log-list.php";
 // ----------- urls ----------------------------------------------------------------------------------------------------
 
 // ----------- get data ------------------------------------------------------------------------------------------------
 $counter = 1;
-$result = $action->admin_list();
+$result = $action->user_log_list();
 // ----------- get data ------------------------------------------------------------------------------------------------
 
 // ----------- delete --------------------------------------------------------------------------------------------------
-if (isset($_GET['remove'])) {
-    $id = $action->request('remove');
-    $_SESSION['error'] = !$action->admin_remove($id);
+if (isset($_GET['view'])) {
+    $id = $action->request('view');
+    $_SESSION['error'] = !$action->user_log_view($id);
     header("Location: $list_url");
     return;
 }
 // ----------- delete --------------------------------------------------------------------------------------------------
 
-// ----------- change status -------------------------------------------------------------------------------------------
-if (isset($_GET['status'])) {
-    $id = $action->request('status');
-    $_SESSION['error'] = !$action->admin_status($id);
+// ----------- delete all --------------------------------------------------------------------------------------------------
+if (isset($_GET['all'])) {
+    $_SESSION['error'] = !$action->user_log_view_all();
     header("Location: $list_url");
     return;
 }
-// ----------- change status -------------------------------------------------------------------------------------------
+// ----------- delete all --------------------------------------------------------------------------------------------------
 
 // ----------- check error ---------------------------------------------------------------------------------------------
 $error = false;
@@ -59,12 +52,12 @@ require_once __DIR__ . "/templates/header.php";
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">مدیران</h1>
+                        <h1 class="m-0 text-dark">لاگ کاربران</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
                             <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                            <li class="breadcrumb-item active">مدیران</li>
+                            <li class="breadcrumb-item active">لاگ کاربران</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -94,17 +87,17 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- /.card-header -->
                     <div class="card-body">
                         <a href="excel.php?admin" class="btn btn-secondary float-left m-1">دریافت خروجی</a>
-                        <a href="admin.php" class="btn btn-danger float-left m-1">ثبت مدیر</a>
+                        <a href="<?= $list_url ?>?all" class="btn btn-danger float-left m-1">حذف همه</a>
                         <table id="example" class="table table-striped">
                             <thead>
                             <tr  class="text-center">
                                 <th>ردیف</th>
-                                <th>نام و نام خانوادگی</th>
-                                <th>نام کاربری</th>
-                                <th>نوع</th>
-                                <th>آخرین بازدید</th>
-                                <th>وضعیت</th>
-                                <th>کنترل</th>
+                                <th>کاربر</th>
+                                <th>شماره تماس</th>
+                                <th>آی پی</th>
+                                <th>فعالیت</th>
+                                <th>تاریخ</th>
+                                <th>خوانده شده</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -112,32 +105,26 @@ require_once __DIR__ . "/templates/header.php";
                             <?php while ($row = $result->fetch_object()) { ?>
                                 <tr>
                                     <td class="text-center"><?= $counter++ ?></td>
-                                    <td class="text-center"><?= $row->first_name . " " . $row->last_name ?></td>
-                                    <td class="text-center"><?= $row->username ?></td>
+                                    <td class="text-center">
+                                        <?= $action->user_get($row->user_id)->first_name . " " . $action->user_get($row->user_id)->last_name ?>
+                                    </td>
+                                    <td class="text-center"><?= $action->user_get($row->user_id)->phone ?></td>
+                                    <td class="text-center"><?= $row->ip ?></td>
                                     <td class="text-center">
                                         <?php
-                                        if ($row->access) echo '<span class="badge bg-info">مدیرکل</span>';
-                                        else echo '<span class="badge bg-secondary">مدیرجزء</span>';
+                                        echo $action->action_get($row->action_id)->text ;
+                                        if($row->variable)
+                                            echo " : " . ($row->variable);
                                         ?>
                                     </td>
                                     <td class="text-center">
-                                        <?= ($row->last_login > 0) ? $action->time_to_shamsi($row->last_login) : "عدم ورود" ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="<?= $list_url ?>?status=<?= $row->id ?>">
-                                            <?php
-                                            if ($row->status) echo '<span class="badge bg-success">فعال</span>';
-                                            else echo '<span class="badge bg-danger">غیرفعال</span>';
-                                            ?>
-                                        </a>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="<?= $main_url ?>?edit=<?= $row->id ?>">
-                                            <i class="fa fa-pencil-square-o"></i>
-                                        </a>
+                                        <?= $action->time_to_shamsi($row->created_at) ?>
                                         |
-                                        <a href="<?= $list_url ?>?remove=<?= $row->id ?>">
-                                            <i class="fa fa-trash"></i>
+                                        <?= date("H:i:s", $row->created_at) ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="<?= $list_url ?>?view=<?= $row->id ?>">
+                                            <i class="fa fa-reply-all"></i>
                                         </a>
                                     </td>
                                 </tr>

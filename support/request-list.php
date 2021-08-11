@@ -1,38 +1,29 @@
 <?php
-$title = "کاربران";
+$title = "درخواست ها";
 require_once __DIR__ . "/app/functions.php";
 $action = new Action();
-$_SESSION['active'] = 5;
+$_SESSION['active'] = 6;
 
 // ----------- urls ----------------------------------------------------------------------------------------------------
 // main url for add , edit
-$main_url = "user.php";
+$main_url = "request.php";
 // main url for remove , change status
-$list_url = "user-list.php";
+$list_url = "request-list.php";
 // ----------- urls ----------------------------------------------------------------------------------------------------
 
 // ----------- get data ------------------------------------------------------------------------------------------------
 $counter = 1;
-$result = $action->user_list();
+$result = $action->request_list();
 // ----------- get data ------------------------------------------------------------------------------------------------
 
 // ----------- delete --------------------------------------------------------------------------------------------------
 if (isset($_GET['remove'])) {
     $id = $action->request('remove');
-    $_SESSION['error'] = !$action->user_remove($id);
+    $_SESSION['error'] = !$action->request_remove($id);
     header("Location: $list_url");
     return;
 }
 // ----------- delete --------------------------------------------------------------------------------------------------
-
-// ----------- change status -------------------------------------------------------------------------------------------
-if (isset($_GET['status'])) {
-    $id = $action->request('status');
-    $_SESSION['error'] = !$action->user_status($id);
-    header("Location: $list_url");
-    return;
-}
-// ----------- change status -------------------------------------------------------------------------------------------
 
 // ----------- check error ---------------------------------------------------------------------------------------------
 $error = false;
@@ -53,12 +44,12 @@ require_once __DIR__ . "/templates/header.php";
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">کاربران</h1>
+                        <h1 class="m-0 text-dark">درخواست ها</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
                             <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                            <li class="breadcrumb-item active">کاربران</li>
+                            <li class="breadcrumb-item active">درخواست ها</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -88,19 +79,15 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- /.card-header -->
                     <div class="card-body">
                         <a href="excel.php?admin" class="btn btn-secondary float-left m-1">دریافت خروجی</a>
-                        <a href="admin.php" class="btn btn-danger float-left m-1">ثبت کاربر</a>
                         <table id="example" class="table table-striped">
                             <thead>
                             <tr  class="text-center">
                                 <th>ردیف</th>
-                                <th>نام و نام خانوادگی</th>
-                                <th>شماره تماس</th>
-                                <th>رمز عبور</th>
-                                <th>تاریخ ثبت نام</th>
-                                <th>نوع</th>
+                                <th>درخواست دهنده</th>
+                                <th>تاریخ درخواست</th>
+                                <th>نوع درخواست</th>
                                 <th>گارانتی</th>
                                 <th>پشتیبانی</th>
-                                <th>استان</th>
                                 <th>وضعیت</th>
                                 <th>کنترل</th>
                             </tr>
@@ -110,23 +97,25 @@ require_once __DIR__ . "/templates/header.php";
                             <?php while ($row = $result->fetch_object()) { ?>
                                 <tr>
                                     <td class="text-center"><?= $counter++ ?></td>
-                                    <td class="text-center"><?= $row->first_name . " " . $row->last_name ?></td>
-                                    <td class="text-center"><?= $row->phone ?></td>
-                                    <td class="text-center"><?= $row->password ?></td>
                                     <td class="text-center">
-                                        <?= $action->time_to_shamsi($row->created_at) ?>
+                                        <?= $action->user_get($row->user_id)->first_name . " " . $action->user_get($row->user_id)->last_name ?>
                                     </td>
-                                    <td class="text-center"><?= ($row->payment)?"بدهکار":"تسویه" ?></td>
+                                    <td class="text-center">
+                                        <?= $action->time_to_shamsi($row->date) ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?= $action->request_type_get($row->type) ?>
+                                    </td>
                                     <td class="text-center">
                                         <?php
-                                        if($row->warranty) {
-                                            if($row->warranty > time()) {
+                                        if($action->user_get($row->user_id)->warranty) {
+                                            if($action->user_get($row->user_id)->warranty > time()) {
                                                 echo '<span class="badge bg-success">';
-                                                echo $action->time_to_shamsi($row->warranty);
+                                                echo $action->time_to_shamsi($action->user_get($row->user_id)->warranty);
                                                 echo '</span>';
                                             } else {
                                                 echo '<span class="badge bg-danger">';
-                                                echo $action->time_to_shamsi($row->warranty);
+                                                echo $action->time_to_shamsi($action->user_get($row->user_id)->warranty);
                                                 echo '</span>';
                                             }
                                         } else {
@@ -136,14 +125,14 @@ require_once __DIR__ . "/templates/header.php";
                                     </td>
                                     <td class="text-center">
                                         <?php
-                                        if($row->support) {
-                                            if($row->support > time()) {
+                                        if($action->user_get($row->user_id)->support) {
+                                            if($action->user_get($row->user_id)->support > time()) {
                                                 echo '<span class="badge bg-success">';
-                                                echo $action->time_to_shamsi($row->support);
+                                                echo $action->time_to_shamsi($action->user_get($row->user_id)->support);
                                                 echo '</span>';
                                             } else {
                                                 echo '<span class="badge bg-danger">';
-                                                echo $action->time_to_shamsi($row->support);
+                                                echo $action->time_to_shamsi($action->user_get($row->user_id)->support);
                                                 echo '</span>';
                                             }
                                         } else {
@@ -151,15 +140,7 @@ require_once __DIR__ . "/templates/header.php";
                                         }
                                         ?>
                                     </td>
-                                    <td class="text-center"><?= ($row->province_id) ? "ok" : "---" ?></td>
-                                    <td class="text-center">
-                                        <a href="<?= $list_url ?>?status=<?= $row->id ?>">
-                                            <?php
-                                            if ($row->status) echo '<span class="badge bg-success">فعال</span>';
-                                            else echo '<span class="badge bg-danger">غیرفعال</span>';
-                                            ?>
-                                        </a>
-                                    </td>
+                                    <td class="text-center"><?= $action->status_get($row->status_id)->title ?></td>
                                     <td class="text-center">
                                         <a href="<?= $main_url ?>?edit=<?= $row->id ?>">
                                             <i class="fa fa-pencil-square-o"></i>
