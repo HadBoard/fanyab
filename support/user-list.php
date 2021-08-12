@@ -88,10 +88,10 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- /.card-header -->
                     <div class="card-body">
                         <a href="excel.php?admin" class="btn btn-secondary float-left m-1">دریافت خروجی</a>
-                        <a href="admin.php" class="btn btn-danger float-left m-1">ثبت کاربر</a>
+                        <a href="<?= $main_url ?>" class="btn btn-danger float-left m-1">ثبت کاربر</a>
                         <table id="example" class="table table-striped">
                             <thead>
-                            <tr  class="text-center">
+                            <tr class="text-center">
                                 <th>ردیف</th>
                                 <th>نام و نام خانوادگی</th>
                                 <th>شماره تماس</th>
@@ -116,11 +116,16 @@ require_once __DIR__ . "/templates/header.php";
                                     <td class="text-center">
                                         <?= $action->time_to_shamsi($row->created_at) ?>
                                     </td>
-                                    <td class="text-center"><?= ($row->payment)?"بدهکار":"تسویه" ?></td>
                                     <td class="text-center">
                                         <?php
-                                        if($row->warranty) {
-                                            if($row->warranty > time()) {
+                                        if ($row->payment == 0) echo "بدهکار";
+                                        elseif ($row->payment == 1) echo "تسویه";
+                                        ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php
+                                        if ($row->warranty) {
+                                            if ($row->warranty > time()) {
                                                 echo '<span class="badge bg-success">';
                                                 echo $action->time_to_shamsi($row->warranty);
                                                 echo '</span>';
@@ -136,8 +141,8 @@ require_once __DIR__ . "/templates/header.php";
                                     </td>
                                     <td class="text-center">
                                         <?php
-                                        if($row->support) {
-                                            if($row->support > time()) {
+                                        if ($row->support) {
+                                            if ($row->support > time()) {
                                                 echo '<span class="badge bg-success">';
                                                 echo $action->time_to_shamsi($row->support);
                                                 echo '</span>';
@@ -151,7 +156,7 @@ require_once __DIR__ . "/templates/header.php";
                                         }
                                         ?>
                                     </td>
-                                    <td class="text-center"><?= ($row->province_id) ? "ok" : "---" ?></td>
+                                    <td class="text-center"><?= ($row->province_id) ? $row->province_id : "---" ?></td>
                                     <td class="text-center">
                                         <a href="<?= $list_url ?>?status=<?= $row->id ?>">
                                             <?php

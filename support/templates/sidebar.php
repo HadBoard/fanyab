@@ -36,13 +36,6 @@ $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
                     </li>
 
                     <li class="nav-item">
-                        <a href="https://fanyab.com/filemanager" target="_blank" class="nav-link <?= ($active == 2)?"active":"" ?>">
-                            <i class="nav-icon fa fa-file-archive-o"></i>
-                            <p>فایل ها</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
                         <a href="admin-list.php" class="nav-link <?= ($active == 3)?"active":"" ?>">
                             <i class="nav-icon fa fa-user-secret"></i>
                             <p>مدیران</p>
@@ -102,6 +95,20 @@ $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
                         <a href="sms-log-list.php" class="nav-link <?= ($active == 10)?"active":"" ?>">
                             <i class="nav-icon fa fa-send"></i>
                             <p>پیام های ارسالی</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="movie-list.php" class="nav-link <?= ($active == 11)?"active":"" ?>">
+                            <i class="nav-icon fa fa-file-movie-o"></i>
+                            <p>
+                                فیلم های آموزشی
+                                <?php
+                                if (isset($action) && $counter = $action->table_counter('tbl_movie')) {
+                                    echo '<span class="right badge badge-secondary">'.$counter.'</span>';
+                                }
+                                ?>
+                            </p>
                         </a>
                     </li>
 

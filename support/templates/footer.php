@@ -47,15 +47,45 @@
 <script src="public/plugins/datatables/jquery.dataTables.js"></script>
 <script src="public/plugins/datatables/dataTables.bootstrap4.js"></script>
 
+<!-- Persian Data Picker -->
+<script src="public/js/persian-date.min.js"></script>
+<script src="public/js/persian-datepicker.min.js"></script>
 
 <!-- jQuery -->
 <script src="public/plugins/jquery/jquery.min.js"></script>
 <!-- DataTables -->
 <script src="public/plugins/datatables/jquery.dataTables.js"></script>
 <script src="public/plugins/datatables/dataTables.bootstrap4.js"></script>
+<!-- Persian Data Picker -->
+<script src="public/js/persian-date.min.js"></script>
+<script src="public/js/persian-datepicker.min.js"></script>
+<script src="public/js/kamadatepicker.js"></script>
 
 <script>
+    var customOptions = {
+          twodigit: false
+        , closeAfterSelect: true
+        , nextButtonIcon: "fa fa-arrow-circle-right"
+        , previousButtonIcon: "fa fa-arrow-circle-left"
+        , buttonsColor: "black"
+        , forceFarsiDigits: true
+        , markToday: true
+        , markHolidays: true
+        , highlightSelectedDay: true
+        , sync: true
+        , gotoToday: true
+    }
+    kamaDatepicker('date', customOptions);
+    kamaDatepicker('date1', customOptions);
+    kamaDatepicker('date2', customOptions);
+
+</script>
+
+<script>
+
     $(function () {
+
+
         $("#example").DataTable({
             dom: 'Bfrtip',
             "language": {

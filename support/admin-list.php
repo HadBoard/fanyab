@@ -94,7 +94,7 @@ require_once __DIR__ . "/templates/header.php";
                     <!-- /.card-header -->
                     <div class="card-body">
                         <a href="excel.php?admin" class="btn btn-secondary float-left m-1">دریافت خروجی</a>
-                        <a href="admin.php" class="btn btn-danger float-left m-1">ثبت مدیر</a>
+                        <a href="<?= $main_url ?>" class="btn btn-danger float-left m-1">ثبت مدیر</a>
                         <table id="example" class="table table-striped">
                             <thead>
                             <tr  class="text-center">

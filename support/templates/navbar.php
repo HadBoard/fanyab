@@ -28,17 +28,45 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="fa fa-bell"></i>
-                <span class="badge badge-warning navbar-badge">3</span>
+                <?php
+                if (isset($action) && $action->my_log_counter()) {
+                    echo '<span class="badge badge-warning navbar-badge">';
+                    echo $action->my_log_counter();
+                    echo '</span>';
+                }
+                ?>
+
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
-                <span class="dropdown-item dropdown-header">0 نوتیفیکیشن</span>
+                <span class="dropdown-item dropdown-header">
+                    <?= $action->my_log_counter(); ?>
+                    نوتیفیکیشن
+                </span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fa fa-file ml-2"></i> 0 گزارش جدید
-                    <span class="float-left text-muted text-sm" الان</span>
-                </a>
+
+                <?php
+                if (isset($action) && $action->my_log_counter() ) {
+                    $res = $action->my_log_list(3);
+                    while ($roww = $res->fetch_object()) {
+                        ?>
+
+                        <a class="dropdown-item">
+                            <i class="fa fa-file ml-2"></i>
+                            <?php
+                            echo $action->action_get($roww->action_id)->text;
+                            if ($roww->variable)
+                                echo " : " . ($roww->variable);
+                            ?>
+                            <span class="float-left text-muted text-sm">
+                        <?= date("H:i", $roww->created_at) ?>
+                    </span>
+                        </a>
+
+                    <?php }
+                } ?>
+
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">مشاهده همه نوتیفیکیشن</a>
+                <a href="admin-log-list.php?me" class="dropdown-item dropdown-footer">مشاهده همه نوتیفیکیشن</a>
             </div>
         </li>
         <!-- Logout icon -->

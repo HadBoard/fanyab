@@ -38,6 +38,8 @@ if ($action->guest()) {
     <link rel="stylesheet" href="public/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
     <!-- Date Picker -->
     <link rel="stylesheet" href="public/plugins/datepicker/datepicker3.css">
+    <!-- Persian Data Picker -->
+    <link rel="stylesheet" href="public/css/persian-datepicker.min.css">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="public/plugins/daterangepicker/daterangepicker-bs3.css">
     <!-- bootstrap wysihtml5 - text editor -->
@@ -48,6 +50,8 @@ if ($action->guest()) {
     <link rel="stylesheet" href="public/css/bootstrap-rtl.min.css">
     <!-- template rtl version -->
     <link rel="stylesheet" href="public/css/custom-style.css">
+
+    <link rel="stylesheet" href="public/css/kamadatepicker.css">
 
 </head>
 <body class="hold-transition sidebar-mini">

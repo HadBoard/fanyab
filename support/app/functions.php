@@ -150,20 +150,6 @@ class Action
 
     // ----------- clean strings (to prevent sql injection attacks)
 
-    function get_tag($attr, $value, $xml)
-    {
-
-        $attr = preg_quote($attr);
-        $value = preg_quote($value);
-
-        $tag_regex = '/<p[^>]*' . $attr . '="' . $value . '">(.*?)<\\/p>/si';
-
-        preg_match($tag_regex,
-            $xml,
-            $matches);
-        return $matches[1];
-    }
-
     public function clean($string, $status = true)
     {
         if ($status) {
@@ -342,7 +328,7 @@ class Action
     {
         if ($this->admin_get($id)->access) return false;
 
-        $this->admin_log(4, $this->admin_get($id)->username);
+        $this->admin_log(5, $this->admin_get($id)->username);
 
         return $this->remove_data("tbl_admin", $id);
     }
@@ -350,6 +336,7 @@ class Action
     // ----------- change admin's status
     public function admin_status($id)
     {
+        $this->admin_log(15, $this->admin_get($id)->username);
         return $this->change_status('tbl_admin', $id);
     }
 
@@ -401,11 +388,49 @@ class Action
         return $result;
     }
 
-    // ----------- change admin's view
+    public function my_log_list($limit = null)
+    {
+        if (is_null($limit)) $limit = $this->my_log_counter();
+        $admin = $this->admin()->id;
+        $result = $this->connection->query("SELECT * FROM `tbl_admin_log` WHERE `admin_id`='$admin' AND `admin_view`=0 ORDER BY `id` DESC LIMIT 0,$limit");
+        if (!$this->result($result)) return false;
+        return $result;
+    }
+
+    public function my_log_counter()
+    {
+        $admin = $this->admin()->id;
+        $result = $this->connection->query("SELECT * FROM `tbl_admin_log` WHERE `admin_id`='$admin' AND `admin_view`=0 ORDER BY `id` DESC");
+        if (!$this->result($result)) return false;
+        return $result->num_rows;
+    }
+
+    public function admin_log_view($id)
+    {
+        $result = $this->connection->query("UPDATE `tbl_admin_log` SET 
+        `view`='1'
+        WHERE `id`='$id'");
+        if (!$this->result($result)) return false;
+        return true;
+
+    }
+
+
     public function admin_log_view_all()
     {
         $result = $this->connection->query("UPDATE `tbl_admin_log` SET 
         `view`='1'");
+        if (!$this->result($result)) return false;
+        return true;
+
+    }
+
+    public function admin_my_log_view_all()
+    {
+        $admin = $this->admin()->id;
+        $result = $this->connection->query("UPDATE `tbl_admin_log` SET 
+        `admin_view`='1'
+        WHERE `admin_id`= '$admin'");
         if (!$this->result($result)) return false;
         return true;
 
@@ -422,51 +447,52 @@ class Action
     }
 
     // ----------- add an admin
-    public function user_add($first_name, $last_name, $phone, $username, $password, $status, $access)
+    public function user_add($first_name, $last_name, $phone, $password, $province, $payment, $warranty, $support, $status)
     {
         $now = time();
         $result = $this->connection->query("INSERT INTO `tbl_user`
-        (`first_name`,`last_name`,`phone`,`username`,`password`,`access`,`status`,`created_at`) 
+        (`first_name`,`last_name`,`phone`,`password`,`province_id`,`payment`,`warranty`,`support`,`status`,`created_at`) 
         VALUES
-        ('$first_name','$last_name','$phone','$username','$password','$access','$status','$now')");
+        ('$first_name','$last_name','$phone','$password','$province','$payment','$warranty','$support','$status','$now')");
         if (!$this->result($result)) return false;
 
-        $this->admin_log(3, $username);
+        $this->admin_log(6, $phone);
 
         return $this->connection->insert_id;
     }
 
     // ----------- update admin's detail
-    public function user_edit($id, $first_name, $last_name, $phone, $username, $password, $status, $access)
+    public function user_edit($id, $first_name, $last_name, $phone, $password, $province, $payment, $warranty, $support, $status)
     {
         $now = time();
         $result = $this->connection->query("UPDATE `tbl_user` SET 
         `first_name`='$first_name',
         `last_name`='$last_name',
         `phone`='$phone',
-        `username` = '$username',
+        `province_id` = '$province',
         `password`='$password',
-        `access` = '$access',
+        `warranty`='$warranty',
+        `payment` = '$payment',
+        `support` = '$support',
         `status`='$status',
         `updated_at`='$now'
         WHERE `id` ='$id'");
         if (!$this->result($result)) return false;
-
-        $this->admin_log(4, $username);
-
+        $this->admin_log(7, $phone);
         return $id;
     }
 
     // ----------- remove admin
     public function user_remove($id)
     {
-        $this->admin_log(4, $this->tbl_user_get($id)->phone);
+        $this->admin_log(8, $this->user_get($id)->phone);
         return $this->remove_data("tbl_user", $id);
     }
 
     // ----------- change admin's status
     public function user_status($id)
     {
+        $this->admin_log(16, $this->user_get($id)->phone);
         return $this->change_status('tbl_user', $id);
     }
 
@@ -489,12 +515,31 @@ class Action
         return $result;
     }
 
+    public function user_log_view($id)
+    {
+        $result = $this->connection->query("UPDATE `tbl_user_log` SET 
+        `view`='1'
+        WHERE `id`='$id'");
+        if (!$this->result($result)) return false;
+        return true;
+
+    }
+
+    public function user_log_view_all()
+    {
+        $result = $this->connection->query("UPDATE `tbl_user_log` SET 
+        `view`='1'");
+        if (!$this->result($result)) return false;
+        return true;
+
+    }
+
     // ----------- end user ------------------------------------------------------------------------------
 
     // ----------- start sms ------------------------------------------------------------------------------
     public function sms_list()
     {
-        return $this->table_list("tbl_sms");
+        return $this->table_list("tbl_sms", false);
     }
 
     public function sms_log_list()
@@ -508,6 +553,7 @@ class Action
         `text`='$text'
         WHERE `slug` ='$slug'");
         if (!$this->result($result)) return false;
+        $this->admin_log(9);
         return true;
     }
 
@@ -569,6 +615,7 @@ class Action
 
     public function request_remove($id)
     {
+        $this->admin_log(17, $this->request_get($id)->code);
         return $this->remove_data("tbl_request", $id);
     }
 
@@ -577,6 +624,11 @@ class Action
         $result = $this->connection->query("SELECT * FROM `tbl_request` WHERE `status_id`='$status' ");
         if (!$this->result($result)) return false;
         return $result->num_rows;
+    }
+
+    public function request_get($id)
+    {
+        return $this->get_data("tbl_request", $id);
     }
 
     // ----------- end request ------------------------------------------------------------------------------
@@ -594,7 +646,52 @@ class Action
 
     // ----------- end status ------------------------------------------------------------------------------
 
+    // ----------- start movie ------------------------------------------------------------------------------
+    public function movie_list()
+    {
+        return $this->table_list("tbl_movie");
+    }
 
+    // ----------- add an admin
+    public function movie_add($title, $cover, $desc, $movie)
+    {
+        $now = time();
+        $result = $this->connection->query("INSERT INTO `tbl_movie`
+        (`title`,`cover`,`description`,`movie`,`created_at`) 
+        VALUES
+        ('$title','$cover','$desc','$movie','$now')");
+        if (!$this->result($result)) return false;
+        $this->admin_log(10, $title);
+        return $this->connection->insert_id;
+    }
+
+    // ----------- update admin's detail
+    public function movie_edit($id, $title, $cover, $desc, $movie)
+    {
+        $result = $this->connection->query("UPDATE `tbl_movie` SET 
+        `title`='$title',
+        `cover`='$cover',
+        `description`='$desc',
+        `movie`='$movie' 
+        WHERE `id` = '$id' ");
+
+        if (!$this->result($result)) return false;
+        $this->admin_log(11, $title);
+        return $id;
+    }
+
+    // ----------- remove admin
+    public function movie_remove($id)
+    {
+        $this->admin_log(12, $this->movie_get($id)->title);
+        return $this->remove_data("tbl_movie", $id);
+    }
+    // ----------- end movie ------------------------------------------------------------------------------
+
+    public function movie_get($id)
+    {
+        return $this->get_data("tbl_movie", $id);
+    }
 
 
 }
