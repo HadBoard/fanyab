@@ -1,5 +1,6 @@
 <?php
 $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
+// last_active -> 13
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -29,7 +30,7 @@ $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <a href="/" class="nav-link <?= ($active == 1)?"active":"" ?>">
+                        <a href="index." class="nav-link <?= ($active == 1)?"active":"" ?>">
                             <i class="nav-icon fa fa-dashboard"></i>
                             <p>داشبورد</p>
                         </a>
@@ -85,6 +86,20 @@ $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
                     </li>
 
                     <li class="nav-item">
+                        <a href="device-list.php" class="nav-link <?= ($active == 13)?"active":"" ?>">
+                            <i class="nav-icon fa fa-deviantart"></i>
+                            <p>
+                                دستگاه ها
+                                <?php
+                                if (isset($action) && $counter = $action->table_counter('tbl_device')) {
+                                    echo '<span class="right badge badge-secondary">'.$counter.'</span>';
+                                }
+                                ?>
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="sms-list.php" class="nav-link <?= ($active == 9)?"active":"" ?>">
                             <i class="nav-icon fa fa-list"></i>
                             <p>پیام های آماده</p>
@@ -109,6 +124,13 @@ $active = (isset($_SESSION['active'])?$_SESSION['active']:0)
                                 }
                                 ?>
                             </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="payment-list.php" class="nav-link <?= ($active == 12)?"active":"" ?>">
+                            <i class="nav-icon fa fa-dollar"></i>
+                            <p>تراکنش ها</p>
                         </a>
                     </li>
 

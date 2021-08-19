@@ -633,6 +633,13 @@ class Action
 
     // ----------- end request ------------------------------------------------------------------------------
 
+    // ----------- start payment ------------------------------------------------------------------------------
+    public function payment_list()
+    {
+        return $this->table_list("tbl_payment", false);
+    }
+    // ----------- end payment ------------------------------------------------------------------------------
+
     // ----------- start status ------------------------------------------------------------------------------
     public function status_list()
     {
@@ -686,12 +693,56 @@ class Action
         $this->admin_log(12, $this->movie_get($id)->title);
         return $this->remove_data("tbl_movie", $id);
     }
-    // ----------- end movie ------------------------------------------------------------------------------
 
     public function movie_get($id)
     {
         return $this->get_data("tbl_movie", $id);
     }
+
+    // ----------- end movie ------------------------------------------------------------------------------
+
+
+    // ----------- start movie ------------------------------------------------------------------------------
+    public function device_list()
+    {
+        return $this->table_list("tbl_device");
+    }
+
+    // ----------- add an admin
+    public function device_add($title, $cover, $desc, $movie)
+    {
+        $now = time();
+        $result = $this->connection->query("INSERT INTO `tbl_device`
+        (`title`,`cover`,`description`,`movie`,`created_at`) 
+        VALUES
+        ('$title','$cover','$desc','$movie','$now')");
+        if (!$this->result($result)) return false;
+        $this->admin_log(10, $title);
+        return $this->connection->insert_id;
+    }
+
+    // ----------- update admin's detail
+    public function device_edit($id, $title, $cover, $desc, $movie)
+    {
+        $result = $this->connection->query("UPDATE `tbl_device` SET 
+        `title`='$title',
+        `cover`='$cover',
+        `description`='$desc',
+        `movie`='$movie' 
+        WHERE `id` = '$id' ");
+
+        if (!$this->result($result)) return false;
+        $this->admin_log(11, $title);
+        return $id;
+    }
+
+    // ----------- remove admin
+    public function device_remove($id)
+    {
+        $this->admin_log(12, $this->movie_get($id)->title);
+        return $this->remove_data("tbl_device", $id);
+    }
+    // ----------- end device ------------------------------------------------------------------------------
 
 
 }
